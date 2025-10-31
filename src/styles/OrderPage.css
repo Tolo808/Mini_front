@@ -1,0 +1,105 @@
+/* OrderPage.css */
+
+/* Full screen background */
+.order-container {
+    min-height: 100vh;
+    background: #f3f4f6;
+    /* Light gray */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2rem 1rem;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Card */
+.order-card {
+    width: 100%;
+    max-width: 800px;
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 2rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+}
+
+/* Headings */
+.order-card h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #1e3a8a;
+}
+
+.order-card p {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 1.5rem;
+}
+
+/* Map container */
+.map-wrapper {
+    height: 400px;
+    width: 100%;
+    border-radius: 1rem;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+/* Buttons */
+.order-card .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 1rem;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    transition: 0.2s;
+}
+
+.order-card .btn-blue {
+    background-color: #2563eb;
+}
+
+.order-card .btn-blue:hover {
+    background-color: #1e40af;
+}
+
+.order-card .btn-green {
+    background-color: #16a34a;
+    width: 100%;
+}
+
+.order-card .btn-green:hover {
+    background-color: #15803d;
+}
+
+.order-card .btn:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+}
+
+/* Price display */
+.price-display {
+    margin-left: auto;
+    font-weight: 600;
+    color: #111827;
+}
+/* Inputs & select */
+.order-card input,
+.order-card select {
+    width: 100%;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 1rem;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.2s;
+}
+
+.order-card input:focus,
+.order-card select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+}
