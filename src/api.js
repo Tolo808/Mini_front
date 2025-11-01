@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'https://miniback-production.up.railway.app/api';
+const API_BASE = 'https://miniback-production.up.railway.app/api';
 
 // Register user
 export const register = (phone, password) =>
