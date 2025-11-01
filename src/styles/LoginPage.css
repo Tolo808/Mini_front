@@ -1,64 +1,90 @@
-/* === Container === */
+/* === Page Container === */
 .login-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    height: 100vh;
+    /* ensures perfect vertical alignment */
+    width: 100%;
     padding: 20px;
-    background-color: #ffffff;
+    margin: 0;
+    background: linear-gradient(135deg, #0f172a, #1e293b, #0f172a);
     font-family: "Inter", sans-serif;
     color: #f0f0f0;
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
-/* === Card === */
+/* === Glassmorphic Card === */
 .login-card {
-    background-color: #1f2937;
-    padding: 40px 30px;
+    background: rgba(31, 41, 55, 0.55);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    padding: 45px 35px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     width: 100%;
     max-width: 400px;
     text-align: center;
-    transition: transform 0.2s ease;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .login-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
 }
 
+/* === Headings === */
 .login-card h1 {
     margin-bottom: 10px;
     font-size: 2rem;
     color: #3b82f6;
+    letter-spacing: 1px;
+    font-weight: 700;
 }
 
 .login-card h2 {
     margin-bottom: 25px;
-    font-size: 1.3rem;
-    font-weight: 500;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: #d1d5db;
 }
 
-/* === Form Inputs === */
+/* === Form === */
 form {
     display: flex;
     flex-direction: column;
     gap: 15px;
+    width: 100%;
 }
 
+/* === Inputs === */
 input {
     padding: 12px 15px;
     border-radius: 10px;
-    border: 1px solid #374151;
-    background-color: #111827;
-    color: #f0f0f0;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background-color: rgba(17, 24, 39, 0.6);
+    color: #f9fafb;
     font-size: 0.95rem;
     outline: none;
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+input::placeholder {
+    color: #9ca3af;
 }
 
 input:focus {
     border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    background-color: rgba(17, 24, 39, 0.9);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
 }
 
 /* === Button === */
@@ -66,17 +92,19 @@ button {
     padding: 12px 15px;
     border-radius: 12px;
     border: none;
-    background-color: #3b82f6;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
     color: #fff;
     font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
-    transition: background 0.2s ease, transform 0.1s ease;
+    transition: all 0.25s ease;
+    width: 100%;
 }
 
 button:hover:not(:disabled) {
-    background-color: #2563eb;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
     transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(37, 99, 235, 0.4);
 }
 
 button:disabled {
@@ -91,16 +119,21 @@ button:disabled {
     font-size: 0.9rem;
     color: #60a5fa;
     cursor: pointer;
-    transition: color 0.2s ease;
+    transition: color 0.25s ease, transform 0.2s ease;
 }
 
 .toggle-btn:hover {
     color: #3b82f6;
+    transform: scale(1.05);
 }
 
-/* Small adjustments for mobile */
+/* === Mobile Adjustments === */
 @media (max-width: 480px) {
     .login-card {
-        padding: 30px 20px;
+        padding: 35px 25px;
+    }
+
+    .login-card h1 {
+        font-size: 1.7rem;
     }
 }
