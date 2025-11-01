@@ -1,146 +1,126 @@
-/* === Container === */
+/* === Background === */
 .order-container {
-    min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    padding: 3rem 1rem;
+    align-items: center;
+    min-height: 100vh;
+    background: radial-gradient(circle at top left, #111827, #000);
     font-family: "Inter", sans-serif;
-    background: linear-gradient(135deg, #0f172a, #1e293b, #0f172a);
-    color: #f3f4f6;
+    color: #f0f0f0;
+    padding: 20px;
 }
 
-/* === Glassmorphic Card === */
+/* === Transparent Card === */
 .order-card {
+    background: rgba(31, 41, 55, 0.85);
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
     width: 100%;
-    max-width: 850px;
-    background: rgba(31, 41, 55, 0.55);
-    backdrop-filter: blur(20px) saturate(150%);
-    -webkit-backdrop-filter: blur(20px) saturate(150%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 2.5rem;
-    border-radius: 1.5rem;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-    transition: all 0.3s ease;
+    max-width: 500px;
+    text-align: center;
+    transition: transform 0.2s ease;
+    backdrop-filter: blur(12px);
 }
 
 .order-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
 }
 
-/* === Headings === */
-.order-card h3 {
-    font-size: 1.8rem;
-    font-weight: 700;
+.order-card h1 {
+    margin-bottom: 10px;
+    font-size: 2rem;
     color: #3b82f6;
-    margin-bottom: 0.5rem;
 }
 
-.order-card p {
-    font-size: 1rem;
-    color: #cbd5e1;
-    margin-bottom: 1.5rem;
-}
-
-/* === Inputs & Select === */
-.order-card input,
-.order-card select {
-    width: 100%;
-    padding: 0.9rem 1rem;
-    margin-bottom: 1.2rem;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 1rem;
-    background-color: rgba(17, 24, 39, 0.6);
-    color: #f9fafb;
-    font-size: 1rem;
-    outline: none;
-    transition: all 0.25s ease;
-    box-sizing: border-box;
-}
-
-.order-card input::placeholder,
-.order-card select option {
+.order-card h2 {
+    margin-bottom: 25px;
+    font-size: 1.1rem;
+    font-weight: 500;
     color: #9ca3af;
 }
 
-.order-card input:focus,
-.order-card select:focus {
-    border-color: #3b82f6;
-    background-color: rgba(17, 24, 39, 0.9);
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25);
+/* === Form === */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-/* === Map Wrapper === */
-.map-wrapper {
-    height: 400px;
-    width: 100%;
-    border-radius: 1rem;
-    overflow: hidden;
-    margin-bottom: 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(17, 24, 39, 0.6);
+label {
+    text-align: left;
+    font-size: 0.9rem;
+    color: #93c5fd;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+input,
+select {
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1px solid #374151;
+    background-color: #111827;
+    color: #f0f0f0;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+input:focus,
+select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
 }
 
 /* === Buttons === */
-.order-card .btn {
-    padding: 0.9rem 1.5rem;
-    border-radius: 1rem;
-    font-weight: 600;
-    color: #fff;
-    cursor: pointer;
+.btn {
+    padding: 12px 15px;
+    border-radius: 12px;
     border: none;
-    transition: all 0.25s ease;
+    background-color: #3b82f6;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
 }
 
-.order-card .btn-blue {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-}
-
-.order-card .btn-blue:hover {
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+.btn:hover:not(:disabled) {
+    background-color: #2563eb;
     transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(37, 99, 235, 0.4);
 }
 
-.order-card .btn-green {
-    background: linear-gradient(135deg, #16a34a, #15803d);
-    width: 100%;
-}
-
-.order-card .btn-green:hover {
-    background: linear-gradient(135deg, #22c55e, #15803d);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(22, 163, 74, 0.4);
-}
-
-.order-card .btn:disabled {
+.btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-    box-shadow: none;
 }
 
-/* === Price Display === */
-.price-display {
-    margin-left: auto;
-    font-weight: 600;
-    color: #f9fafb;
-    background: rgba(59, 130, 246, 0.2);
-    padding: 0.4rem 0.8rem;
-    border-radius: 0.5rem;
+/* === Confirm Button === */
+.confirm {
+    background-color: #16a34a;
+}
+
+.confirm:hover {
+    background-color: #15803d;
+}
+
+/* === Result Box === */
+.result-box {
+    background-color: #0f172a;
+    color: #d1d5db;
+    padding: 12px;
+    border-radius: 10px;
+    text-align: left;
+    font-size: 0.9rem;
+    white-space: pre-wrap;
+    font-family: monospace;
 }
 
 /* === Mobile Adjustments === */
-@media (max-width: 600px) {
+@media (max-width: 480px) {
     .order-card {
-        padding: 1.8rem;
-    }
-
-    .order-card h3 {
-        font-size: 1.4rem;
-    }
-
-    .map-wrapper {
-        height: 300px;
+        padding: 30px 20px;
     }
 }
