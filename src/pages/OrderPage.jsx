@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MapPin, Navigation, DollarSign } from "lucide-react";
 import { createOrder } from "../api";
-import { useNavigate } from "react-router-dom";
 import "../styles/OrderPage.css";
+
+const API_BASE = "https://miniback-production.up.railway.app/api";
 
 export default function OrderPage() {
   const [pickup, setPickup] = useState("");
@@ -13,55 +14,93 @@ export default function OrderPage() {
   const [price, setPrice] = useState(null);
   const [results, setResults] = useState("");
   const [loading, setLoading] = useState(false);
+  const [tg, setTg] = useState(null);
 
-  const nav = useNavigate();
-
-  const calculatePrice = async () => {
-    if (!pickup || !dropoff) {
-      setResults("⚠️ Please enter both pickup and dropoff locations.");
-      return;
+  // Load Telegram WebApp and Chapa SDK
+  useEffect(() => {
+    if (window.Telegram && window.Telegram.WebApp) {
+      setTg(window.Telegram.WebApp);
+      window.Telegram.WebApp.ready();
     }
 
+    const script = document.createElement("script");
+    script.src = "https://checkout.chapa.co/v1/checkout.js";
+    script.async = true;
+    document.body.appendChild(script);
+    return () => document.body.removeChild(script);
+  }, []);
+
+  // Mock price calculation
+  const calculatePrice = () => {
+    if (!pickup || !dropoff) return setResults("⚠️ Enter pickup & dropoff.");
     setLoading(true);
-    try {
-      // Simple placeholder distance (simulate logic)
-      const randomKm = Math.floor(Math.random() * 20) + 1;
-
-      let calculatedPrice = 0;
-      if (randomKm <= 5) calculatedPrice = 100;
-      else if (randomKm <= 10) calculatedPrice = 200;
-      else if (randomKm <= 17) calculatedPrice = 300;
-      else calculatedPrice = 400;
-
+    setTimeout(() => {
+      const distanceKm = Math.floor(Math.random() * 20) + 1;
+      const calculatedPrice =
+        distanceKm <= 5
+          ? 100
+          : distanceKm <= 10
+          ? 200
+          : distanceKm <= 17
+          ? 300
+          : 400;
       setPrice(calculatedPrice);
-      setResults(
-        `📍 Estimated Distance: ${randomKm} km\n💰 Estimated Price: ${calculatedPrice} birr`
-      );
-    } catch {
-      setResults("❌ Error calculating price.");
-      setPrice(null);
-    } finally {
+      setResults(`📍 Distance: ${distanceKm} km\n💰 Price: ${calculatedPrice} birr`);
       setLoading(false);
-    }
+    }, 500);
   };
 
+  // Handle order creation & Chapa checkout
   const handleConfirm = async () => {
     const token = localStorage.getItem("token");
-    if (!token) return nav("/");
-
-    if (!price) {
-      alert("Please calculate price first.");
-      return;
-    }
+    if (!token) return alert("Log in first");
+    if (!price) return alert("Calculate price first");
 
     setLoading(true);
     try {
-      const payload = { pickup, dropoff, item, quantity, payment, price };
-      await createOrder(token, payload);
-      alert("✅ Order placed successfully!");
-      nav("/");
+      // 1️⃣ Create order (backend handles Chapa)
+      const orderRes = await createOrder({ pickup, dropoff, item, quantity, payment, price });
+      const orderId = orderRes.data.order_id;
+      const chapaData = orderRes.data.chapa;
+
+      if (payment === "Cash") {
+        alert("Order placed! Please pay the courier in cash.");
+        return;
+      }
+
+      if (!chapaData || !chapaData.checkout_url || !chapaData.public_key)
+        throw new Error("Failed to initialize payment");
+
+      // 2️⃣ Open Chapa modal
+      if (window.Chapa) {
+        window.Chapa.checkout({
+          key: chapaData.public_key,
+          tx_ref: chapaData.tx_ref || orderId,
+          amount: price,
+          currency: "ETB",
+          payment_options: "mobile,card",
+          customer: {
+            email: `user${localStorage.getItem("phone")}@example.com`,
+            phone: localStorage.getItem("phone"),
+            name: `User ${localStorage.getItem("phone")}`,
+          },
+          customizations: {
+            title: "Tolo Delivery Payment",
+            description: `Payment for order ${orderId}`,
+            logo: "https://yourfrontend.com/logo.png",
+          },
+          onclose: () => alert("Payment modal closed"),
+          callback: (response) => {
+            alert(`Payment status: ${response.status}`);
+            if (tg) tg.close();
+          },
+        });
+      } else {
+        // fallback for non-Chapa modal
+        window.open(chapaData.checkout_url, "_blank");
+      }
     } catch (err) {
-      alert(err?.response?.data?.error || "Failed to create order");
+      alert(err?.message || "Failed to process order");
     } finally {
       setLoading(false);
     }
@@ -77,22 +116,12 @@ export default function OrderPage() {
           <label>
             <MapPin className="icon" /> Pickup Location
           </label>
-          <input
-            type="text"
-            placeholder="Enter pickup location..."
-            value={pickup}
-            onChange={(e) => setPickup(e.target.value)}
-          />
+          <input type="text" value={pickup} onChange={(e) => setPickup(e.target.value)} />
 
           <label>
             <Navigation className="icon" /> Dropoff Location
           </label>
-          <input
-            type="text"
-            placeholder="Enter dropoff location..."
-            value={dropoff}
-            onChange={(e) => setDropoff(e.target.value)}
-          />
+          <input type="text" value={dropoff} onChange={(e) => setDropoff(e.target.value)} />
 
           <input
             type="text"
@@ -100,11 +129,9 @@ export default function OrderPage() {
             value={item}
             onChange={(e) => setItem(e.target.value)}
           />
-
           <input
             type="number"
             min="1"
-            placeholder="Quantity"
             value={quantity}
             onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
           />
@@ -117,12 +144,11 @@ export default function OrderPage() {
 
           <button
             type="button"
+            className="btn btn-blue"
             onClick={calculatePrice}
             disabled={loading}
-            className="btn"
           >
-            <DollarSign className="icon" />{" "}
-            {loading ? "Calculating..." : "Calculate Price"}
+            <DollarSign className="icon" /> {loading ? "Calculating..." : "Calculate Price"}
           </button>
 
           {results && <pre className="result-box">{results}</pre>}
@@ -130,11 +156,11 @@ export default function OrderPage() {
           {price && (
             <button
               type="button"
-              className="btn confirm"
+              className="btn btn-green"
               onClick={handleConfirm}
               disabled={loading}
             >
-              {loading ? "..." : "Confirm Order"}
+              {loading ? "Processing..." : "Confirm & Pay"}
             </button>
           )}
         </form>
