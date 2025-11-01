@@ -1,126 +1,119 @@
-/* === Background === */
-.order-container {
+/* === Full Page Layout === */
+.order-page {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    font-family: "Inter", sans-serif;
+}
+
+/* === Map background === */
+.map-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 0;
+}
+
+/* === Overlay card === */
+.order-overlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: radial-gradient(circle at top left, #111827, #000);
-    font-family: "Inter", sans-serif;
-    color: #f0f0f0;
-    padding: 20px;
+    z-index: 5;
+    padding: 2rem 1rem;
+    background: linear-gradient(to top,
+            rgba(0, 0, 0, 0.7) 10%,
+            rgba(0, 0, 0, 0.2) 60%,
+            transparent);
 }
 
-/* === Transparent Card === */
+/* === Card === */
 .order-card {
-    background: rgba(31, 41, 55, 0.85);
-    padding: 40px 30px;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    background: rgba(31, 41, 55, 0.8);
+    /* transparent dark card */
+    color: #f9fafb;
+    padding: 2rem;
+    border-radius: 1.5rem;
     width: 100%;
-    max-width: 500px;
-    text-align: center;
-    transition: transform 0.2s ease;
-    backdrop-filter: blur(12px);
+    max-width: 450px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
 }
 
-.order-card:hover {
-    transform: translateY(-5px);
-}
-
-.order-card h1 {
-    margin-bottom: 10px;
-    font-size: 2rem;
+/* === Headings === */
+.order-card h3 {
+    font-size: 1.6rem;
+    font-weight: 700;
     color: #3b82f6;
+    margin-bottom: 1.5rem;
 }
 
-.order-card h2 {
-    margin-bottom: 25px;
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: #9ca3af;
-}
-
-/* === Form === */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-label {
-    text-align: left;
-    font-size: 0.9rem;
-    color: #93c5fd;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-input,
-select {
-    padding: 12px 15px;
-    border-radius: 10px;
-    border: 1px solid #374151;
-    background-color: #111827;
-    color: #f0f0f0;
-    font-size: 0.95rem;
+/* === Inputs === */
+.order-card input {
+    width: 100%;
+    padding: 0.9rem;
+    border: none;
+    border-radius: 0.75rem;
+    background: rgba(17, 24, 39, 0.8);
+    color: #f9fafb;
+    margin-bottom: 1rem;
+    font-size: 1rem;
     outline: none;
-    transition: all 0.2s ease;
+    transition: 0.2s;
 }
 
-input:focus,
-select:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+.order-card input:focus {
+    border: 1px solid #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
 }
 
 /* === Buttons === */
 .btn {
-    padding: 12px 15px;
-    border-radius: 12px;
-    border: none;
-    background-color: #3b82f6;
-    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.9rem;
+    border-radius: 0.75rem;
     font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
-    transition: background 0.2s ease, transform 0.1s ease;
+    border: none;
+    transition: 0.2s;
 }
 
-.btn:hover:not(:disabled) {
-    background-color: #2563eb;
-    transform: translateY(-2px);
+.btn-blue {
+    background: #3b82f6;
+    color: #fff;
 }
 
-.btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+.btn-blue:hover {
+    background: #2563eb;
 }
 
-/* === Confirm Button === */
-.confirm {
-    background-color: #16a34a;
+.btn-green {
+    background: #16a34a;
+    color: #fff;
+    width: 100%;
 }
 
-.confirm:hover {
-    background-color: #15803d;
+.btn-green:hover {
+    background: #15803d;
 }
 
 /* === Result Box === */
 .result-box {
-    background-color: #0f172a;
-    color: #d1d5db;
-    padding: 12px;
-    border-radius: 10px;
-    text-align: left;
-    font-size: 0.9rem;
-    white-space: pre-wrap;
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background: rgba(17, 24, 39, 0.7);
+    color: #e5e7eb;
     font-family: monospace;
-}
-
-/* === Mobile Adjustments === */
-@media (max-width: 480px) {
-    .order-card {
-        padding: 30px 20px;
-    }
+    white-space: pre-wrap;
+    text-align: left;
 }
