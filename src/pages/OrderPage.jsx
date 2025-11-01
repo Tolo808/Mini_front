@@ -1,116 +1,144 @@
-import React, { useState } from 'react'
-import MapPicker from '../components/MapPicker.jsx'
-import { getPrice, createOrder } from '../api'
-import { useNavigate } from 'react-router-dom'
-import '../styles/OrderPage.css'
+import React, { useState } from "react";
+import { MapPin, Navigation, DollarSign } from "lucide-react";
+import { createOrder } from "../api";
+import { useNavigate } from "react-router-dom";
+import "../styles/OrderPage.css";
 
 export default function OrderPage() {
-  const [pickup, setPickup] = useState(null)
-  const [dropoff, setDropoff] = useState(null)
-  const [pickupText, setPickupText] = useState('')
-  const [dropoffText, setDropoffText] = useState('')
-  const [item, setItem] = useState('')
-  const [quantity, setQuantity] = useState(1)
-  const [payment, setPayment] = useState('Cash')
-  const [price, setPrice] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const nav = useNavigate()
+  const [pickup, setPickup] = useState("");
+  const [dropoff, setDropoff] = useState("");
+  const [item, setItem] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [payment, setPayment] = useState("Cash");
+  const [price, setPrice] = useState(null);
+  const [results, setResults] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  async function handleGetPrice() {
-    if ((!pickup && !pickupText) || (!dropoff && !dropoffText))
-      return alert('Select or enter pickup and dropoff')
-    setLoading(true)
-    try {
-      const res = await getPrice(
-        pickup || { lat: 0, lng: 0 }, // fallback coordinates if manually entered
-        dropoff || { lat: 0, lng: 0 }
-      )
-      setPrice(res.data.price)
-    } catch (err) {
-      alert(err?.response?.data?.error || 'Failed to get price')
-    } finally {
-      setLoading(false)
-    }
-  }
+  const nav = useNavigate();
 
-  async function handleConfirm() {
-    const token = localStorage.getItem('token')
-    if (!token) return nav('/')
-    setLoading(true)
-    try {
-      const payload = {
-        pickup: pickup || pickupText,
-        dropoff: dropoff || dropoffText,
-        item,
-        quantity,
-        payment,
-        price
-      }
-      await createOrder(token, payload)
-      alert('Order placed!')
-      nav('/')
-    } catch (err) {
-      alert(err?.response?.data?.error || 'Failed to create order')
-    } finally {
-      setLoading(false)
+  const calculatePrice = async () => {
+    if (!pickup || !dropoff) {
+      setResults("⚠️ Please enter both pickup and dropoff locations.");
+      return;
     }
-  }
+
+    setLoading(true);
+    try {
+      // Simple placeholder distance (simulate logic)
+      const randomKm = Math.floor(Math.random() * 20) + 1;
+
+      let calculatedPrice = 0;
+      if (randomKm <= 5) calculatedPrice = 100;
+      else if (randomKm <= 10) calculatedPrice = 200;
+      else if (randomKm <= 17) calculatedPrice = 300;
+      else calculatedPrice = 400;
+
+      setPrice(calculatedPrice);
+      setResults(
+        `📍 Estimated Distance: ${randomKm} km\n💰 Estimated Price: ${calculatedPrice} birr`
+      );
+    } catch {
+      setResults("❌ Error calculating price.");
+      setPrice(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleConfirm = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return nav("/");
+
+    if (!price) {
+      alert("Please calculate price first.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const payload = { pickup, dropoff, item, quantity, payment, price };
+      await createOrder(token, payload);
+      alert("✅ Order placed successfully!");
+      nav("/");
+    } catch (err) {
+      alert(err?.response?.data?.error || "Failed to create order");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="order-container">
       <div className="order-card">
-        <h3>Order Details</h3>
-        <p>Select pickup/dropoff on map or enter manually.</p>
+        <h1>Place Your Order</h1>
+        <h2>Fast, reliable delivery at your fingertips</h2>
 
-        <div className="map-wrapper">
-          <MapPicker
-            pickup={pickup}
-            setPickup={setPickup}
-            dropoff={dropoff}
-            setDropoff={setDropoff}
+        <form>
+          <label>
+            <MapPin className="icon" /> Pickup Location
+          </label>
+          <input
+            type="text"
+            placeholder="Enter pickup location..."
+            value={pickup}
+            onChange={(e) => setPickup(e.target.value)}
           />
-        </div>
 
-        <input
-          placeholder="Pickup location"
-          value={pickupText}
-          onChange={e => setPickupText(e.target.value)}
-        />
-        <input
-          placeholder="Dropoff location"
-          value={dropoffText}
-          onChange={e => setDropoffText(e.target.value)}
-        />
-        <input
-          placeholder="Item description"
-          value={item}
-          onChange={e => setItem(e.target.value)}
-        />
-        <input
-          type="number"
-          min="1"
-          placeholder="Quantity"
-          value={quantity}
-          onChange={e => setQuantity(Number(e.target.value))}
-        />
-        <select value={payment} onChange={e => setPayment(e.target.value)}>
-          <option value="Cash">Cash</option>
-          <option value="Mobile Money">Mobile Money</option>
-          <option value="Card">Card</option>
-        </select>
+          <label>
+            <Navigation className="icon" /> Dropoff Location
+          </label>
+          <input
+            type="text"
+            placeholder="Enter dropoff location..."
+            value={dropoff}
+            onChange={(e) => setDropoff(e.target.value)}
+          />
 
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '1rem' }}>
-          <button className="btn btn-blue" onClick={handleGetPrice} disabled={loading}>
-            Calculate Price
+          <input
+            type="text"
+            placeholder="Item description"
+            value={item}
+            onChange={(e) => setItem(e.target.value)}
+          />
+
+          <input
+            type="number"
+            min="1"
+            placeholder="Quantity"
+            value={quantity}
+            onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
+          />
+
+          <select value={payment} onChange={(e) => setPayment(e.target.value)}>
+            <option value="Cash">Cash</option>
+            <option value="Mobile Money">Mobile Money</option>
+            <option value="Card">Card</option>
+          </select>
+
+          <button
+            type="button"
+            onClick={calculatePrice}
+            disabled={loading}
+            className="btn"
+          >
+            <DollarSign className="icon" />{" "}
+            {loading ? "Calculating..." : "Calculate Price"}
           </button>
-          {price !== null && <div className="price-display">Price: {price} ETB</div>}
-        </div>
-        {price !== null && (
-          <button className="btn btn-green" onClick={handleConfirm} disabled={loading}>
-            {loading ? '...' : 'Confirm Order'}
-          </button>
-        )}
+
+          {results && <pre className="result-box">{results}</pre>}
+
+          {price && (
+            <button
+              type="button"
+              className="btn confirm"
+              onClick={handleConfirm}
+              disabled={loading}
+            >
+              {loading ? "..." : "Confirm Order"}
+            </button>
+          )}
+        </form>
       </div>
     </div>
-  )
+  );
 }
